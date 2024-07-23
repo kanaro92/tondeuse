@@ -16,7 +16,7 @@ public class TondeuseFileReader implements ItemReader<String> {
     public String read() throws Exception {
         if (reader == null) {
             try {
-                reader = new BufferedReader(new FileReader("input.txt"));
+                reader = new BufferedReader(new FileReader("input_test.txt"));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException("File not found: input.txt", e);
             }

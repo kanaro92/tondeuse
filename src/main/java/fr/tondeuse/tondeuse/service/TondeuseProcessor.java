@@ -16,21 +16,28 @@ public class TondeuseProcessor implements ItemProcessor<String, Tondeuse> {
     @Override
     public Tondeuse process(String line) throws Exception {
         if (line.matches("\\d+ \\d+")) {
+            // Ligne des dimensions de la grille
             String[] coordinates = line.split(" ");
             maxX = Integer.parseInt(coordinates[0]);
             maxY = Integer.parseInt(coordinates[1]);
             tondeuseService = new TondeuseService(maxX, maxY);
             return null;
         } else if (line.matches("\\d+ \\d+ [NESW]")) {
+            // Ligne de position initiale de la tondeuse
             String[] parts = line.split(" ");
             int x = Integer.parseInt(parts[0]);
             int y = Integer.parseInt(parts[1]);
             char orientation = parts[2].charAt(0);
-            return new Tondeuse(x, y, orientation);
-        } else {
+            lastTondeuse = new Tondeuse(x, y, orientation);
+            return null;
+        } else if (line.matches("[GAD]+")) {
+            // Ligne des instructions de la tondeuse
             Tondeuse tondeuse = tondeuseService.executeInstructions(lastTondeuse, line);
-            lastTondeuse = tondeuse;  //save last tondeuse instructions
+            lastTondeuse = tondeuse;
             return tondeuse;
+        } else {
+            // Ligne non reconnue
+            throw new IllegalArgumentException("Ligne non reconnue : " + line);
         }
     }
 
